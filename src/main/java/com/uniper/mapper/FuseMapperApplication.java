@@ -6,7 +6,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import com.uniper.mapper.model.CompanyAlias;
 
-//This is my spring boot application
+//This is my spring boot application//
 @SpringBootApplication
 public class FuseMapperApplication {
 
