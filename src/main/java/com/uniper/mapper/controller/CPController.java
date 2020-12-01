@@ -4,15 +4,19 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.uniper.mapper.exception.UpStreamAliasExistException;
+
+import com.uniper.mapper.exception.CpNotFoundException;
 import com.uniper.mapper.model.CompanyAlias;
 import com.uniper.mapper.service.CPService;
 
@@ -48,7 +52,11 @@ public class CPController {
 	 @PostMapping("/cp" ) 
 	 public CompanyAlias createcp(@RequestBody CompanyAlias cpalias) { 	 
 	 
-		  return CPService.createcp(cpalias); 
+		  try {
+			return CPService.createcp(cpalias);
+		} catch (UpStreamAliasExistException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"cp already exist so cant create one more cp with same  details.");
+		} 
 	 }
 	 
 	@GetMapping("/cps")
@@ -58,20 +66,28 @@ public class CPController {
 	}
 	@GetMapping("/cps/{id}")
 	public Optional<CompanyAlias> getCpById(@PathVariable("id") long id) {
-		return CPService.getCpById(id);
+		try {
+			return CPService.getCpById(id);
+		} catch (CpNotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+		}
 
 	}
 	@PutMapping("/cps/{id}")
 	public CompanyAlias updateCpById(@PathVariable("id") long id,@RequestBody CompanyAlias cpalias) {
-		return CPService.updateCpbyId(id,cpalias);
+		try {
+			return CPService.updateCpbyId(id,cpalias);
+		} catch (CpNotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+		}
 	}
 	@DeleteMapping("/cps/{id}")
 	public void deleteCpById(@PathVariable("id") long id) {
 		CPService.deleteCpbyId(id);
 	}
 	@GetMapping("/cps/byCpName/{name}")
-	public Optional<CompanyAlias> getCpByname(@PathVariable("name") String name) {
-		return CPService.getCpByName(name);
+	public CompanyAlias getUpStreamByname(@PathVariable("name") String name) {
+		return CPService.getUpStreamByname(name);
 	
 	
 	}

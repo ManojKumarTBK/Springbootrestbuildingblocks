@@ -11,7 +11,9 @@ import com.uniper.mapper.model.CompanyAlias;
 @Repository
 public interface CompanyRepo extends JpaRepository<CompanyAlias,Long> {
 	
-	public Optional<CompanyAlias> findByCompanyName(String companyName);
+	//public Optional<CompanyAlias> findByCompanyName(String companyName);
+
+	public CompanyAlias findByUpStreamAlias(String upStreamAlias);
 	
 	
 	
