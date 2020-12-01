@@ -32,8 +32,8 @@ import com.uniper.mapper.model.CompanyAlias;
 
 
 
-@Controller
-public class CPController {
+@RestController
+public class CPController1 {
 	
 	@Autowired
 	CompanyRepo repo;
